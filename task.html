@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Tasks | BHIM Testing Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --accent: #06b6d4;
+      --background: #f5f7fb;
+      --surface: #ffffff;
+      --text: #172033;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --success: #047857;
+      --success-bg: #d1fae5;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --shadow: 0 8px 24px rgba(30, 64, 175, .08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: #fff;
+      padding: 42px 20px 62px;
+    }
+
+    .hero-inner, .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); margin-bottom: 8px; }
+    .hero p { opacity: .92; }
+
+    .page { margin-top: -30px; padding-bottom: 40px; }
+
+    .toolbar {
+      align-items: center;
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding: 16px;
+    }
+
+    .search {
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      display: flex;
+      flex: 1 1 280px;
+      gap: 10px;
+      padding: 10px 13px;
+    }
+
+    .search input, .filter select {
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      font: inherit;
+      outline: 0;
+      width: 100%;
+    }
+
+    .filter { flex: 0 1 160px; }
+    .filter select { border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+
+    .view-toggle { display: flex; gap: 6px; }
+    .view-toggle button {
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      border-radius: 9px;
+      color: var(--primary-dark);
+      cursor: pointer;
+      font: inherit;
+      padding: 10px 14px;
+    }
+    .view-toggle button.active, .view-toggle button:hover { background: var(--primary); color: #fff; }
+
+    .summary { color: var(--muted); font-size: .92rem; margin: 0 2px 14px; }
+
+    .tasks { display: grid; gap: 14px; }
+    .tasks.grid { grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; }
+
+    .task-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--primary);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      padding: 20px;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .task-card:hover { box-shadow: 0 12px 28px rgba(30, 64, 175, .14); transform: translateY(-2px); }
+
+    .task-heading { align-items: flex-start; display: flex; gap: 12px; justify-content: space-between; }
+    .task-heading h2 { font-size: 1.08rem; line-height: 1.35; }
+    .task-icon { color: var(--primary); font-size: 1.25rem; margin-top: 2px; }
+    .status { border-radius: 999px; font-size: .75rem; font-weight: 700; padding: 4px 9px; white-space: nowrap; }
+    .status.in-progress { background: var(--warning-bg); color: var(--warning); }
+    .status.completed { background: var(--success-bg); color: var(--success); }
+    .status.pending { background: var(--danger-bg); color: var(--danger); }
+
+    .task-meta { color: var(--muted); display: flex; flex-wrap: wrap; font-size: .88rem; gap: 12px; margin: 13px 0; }
+    .task-meta span { align-items: center; display: inline-flex; gap: 6px; }
+    .task-description { border-top: 1px solid var(--border); color: #475569; font-size: .93rem; margin-top: 12px; padding-top: 13px; }
+    .empty { color: var(--muted); padding: 35px; text-align: center; }
+
+    /* List view presents each task as a compact row while retaining all details. */
+    .tasks.list .task-card { align-items: center; display: grid; grid-template-columns: minmax(200px, 1.2fr) minmax(170px, 1fr) minmax(180px, 1.4fr) auto; gap: 18px; }
+    .tasks.list .task-heading { display: block; }
+    .tasks.list .task-meta { margin: 0; }
+    .tasks.list .task-description { border-left: 1px solid var(--border); border-top: 0; margin: 0; padding: 0 0 0 18px; }
+
+    @media (max-width: 800px) {
+      .tasks.list .task-card { align-items: stretch; display: block; }
+      .tasks.list .task-meta { margin: 13px 0; }
+      .tasks.list .task-description { border-left: 0; border-top: 1px solid var(--border); padding: 13px 0 0; }
+      .tasks.list .status { display: inline-block; margin-top: 12px; }
+    }
+
+    @media (max-width: 560px) {
+      .hero-inner, .page { width: min(100% - 24px, 1180px); }
+      .toolbar { align-items: stretch; }
+      .view-toggle, .view-toggle button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1><i class="fa-solid fa-list-check"></i> Team Tasks</h1>
+      <p>Track testing, documentation, and daily activities for the BHIM App team.</p>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="toolbar" aria-label="Task controls">
+      <label class="search" for="taskSearch">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="taskSearch" type="search" placeholder="Search by name, task, or details..." autocomplete="off">
+      </label>
+      <label class="filter" for="statusFilter">
+        <select id="statusFilter" aria-label="Filter tasks by status">
+          <option value="all">All statuses</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="pending">Pending</option>
+        </select>
+      </label>
+      <div class="view-toggle" role="group" aria-label="Choose task view">
+        <button id="listView" type="button" class="active" aria-pressed="true"><i class="fa-solid fa-list"></i> List</button>
+        <button id="gridView" type="button" aria-pressed="false"><i class="fa-solid fa-table-cells-large"></i> Grid</button>
+      </div>
+    </section>
+
+    <p class="summary" id="taskSummary" aria-live="polite"></p>
+    <section id="taskContainer" class="tasks list" aria-label="Team task list"></section>
+  </main>
+
+  <script>
+    const tasks = [
+      {
+        name: "Uzaiffa",
+        task: "Update widget test cases and start regression testing",
+        date: "21 Sep 2026",
+        status: "in-progress",
+        details: "Update widget test cases in the agreed format. Start iOS regression if the build is received; otherwise continue Android testing."
+      },
+      {
+        name: "Snehal",
+        task: "Subscription test case review and Bio Auth test cases",
+        date: "21 Sep 2026",
+        status: "in-progress",
+        details: "Connect with Ranjan for the Subscription module test case review. Perform iOS regression when available, or proceed with Android testing, and write Bio Auth test cases."
+      },
+      {
+        name: "Srushtee",
+        task: "Regression testing - Android build",
+        date: "21 Sep 2026",
+        status: "in-progress",
+        details: "Execute regression testing on the latest Android CUG build and record defects, observations, and evidence."
+      },
+      {
+        name: "Akash Gule",
+        task: "Planned leave",
+        date: "21 Sep 2026",
+        status: "completed",
+        details: "Team availability marked as planned leave for the day."
+      },
+      {
+        name: "All Team Members",
+        task: "Update productivity tracker",
+        date: "21 Sep 2026",
+        status: "pending",
+        details: "Submit daily productivity data with completed work, testing effort, blockers, and supporting links."
+      },
+      {
+        name: "All Team Members",
+        task: "Update check-in and check-out",
+        date: "21 Sep 2026",
+        status: "pending",
+        details: "Record the daily check-in and check-out update in the team communication channel."
+      },
+      {
+        name: "QA Team",
+        task: "Test BHIM regression builds",
+        date: "21 Sep 2026",
+        status: "in-progress",
+        details: "Validate Android 4.0.30 (242175) and iOS 4.0.30 (6) builds, then share feedback and escalation details."
+      },
+      {
+        name: "QA Team",
+        task: "Upload user journey evidence",
+        date: "21 Sep 2026",
+        status: "pending",
+        details: "Capture and upload complete user journey evidence so it remains available for future reference and escalations."
+      }
+    ];
+
+    const container = document.getElementById("taskContainer");
+    const searchInput = document.getElementById("taskSearch");
+    const statusFilter = document.getElementById("statusFilter");
+    const summary = document.getElementById("taskSummary");
+    const listButton = document.getElementById("listView");
+    const gridButton = document.getElementById("gridView");
+
+    function statusLabel(status) {
+      return status.replace("-", " ").replace(/\b\w/g, letter => letter.toUpperCase());
+    }
+
+    function renderTasks() {
+      const query = searchInput.value.trim().toLowerCase();
+      const selectedStatus = statusFilter.value;
+      const filteredTasks = tasks.filter(task => {
+        const searchableText = `${task.name} ${task.task} ${task.date} ${task.status} ${task.details}`.toLowerCase();
+        return searchableText.includes(query) && (selectedStatus === "all" || task.status === selectedStatus);
+      });
+
+      summary.textContent = `Showing ${filteredTasks.length} of ${tasks.length} tasks`;
+      container.innerHTML = filteredTasks.length ? filteredTasks.map(task => `
+        <article class="task-card">
+          <div class="task-heading">
+            <div>
+              <div class="task-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+              <h2>${task.task}</h2>
+            </div>
+            <span class="status ${task.status}">${statusLabel(task.status)}</span>
+          </div>
+          <div class="task-meta">
+            <span><i class="fa-solid fa-user"></i> ${task.name}</span>
+            <span><i class="fa-regular fa-calendar"></i> ${task.date}</span>
+          </div>
+          <p class="task-description"><strong>Task in details:</strong> ${task.details}</p>
+        </article>
+      `).join("") : '<p class="empty">No tasks match your search or status filter.</p>';
+    }
+
+    function setView(view) {
+      const isGrid = view === "grid";
+      container.classList.toggle("grid", isGrid);
+      container.classList.toggle("list", !isGrid);
+      listButton.classList.toggle("active", !isGrid);
+      gridButton.classList.toggle("active", isGrid);
+      listButton.setAttribute("aria-pressed", String(!isGrid));
+      gridButton.setAttribute("aria-pressed", String(isGrid));
+    }
+
+    searchInput.addEventListener("input", renderTasks);
+    statusFilter.addEventListener("change", renderTasks);
+    listButton.addEventListener("click", () => setView("list"));
+    gridButton.addEventListener("click", () => setView("grid"));
+    renderTasks();
+  </script>
+</body>
+</html>
