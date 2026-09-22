@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bhim App Testing Portal</title>
 
-<link rel="stylesheetwesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
     *{
@@ -64,6 +64,96 @@
         margin-bottom:20px;
         border-left:5px solid #2563eb;
         padding-left:12px;
+    }
+
+    .updates-grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+        gap:25px;
+        margin:25px 0 30px;
+    }
+
+    .update-box{
+        background:#fff;
+        border-radius:18px;
+        padding:25px;
+        border-top:5px solid #2563eb;
+        box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .update-box.activity-box{
+        border-top-color:#10b981;
+    }
+
+    .update-box h3{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        color:#1e40af;
+        font-size:21px;
+        margin-bottom:18px;
+    }
+
+    .activity-box h3{
+        color:#047857;
+    }
+
+    .update-box h3 i{
+        font-size:22px;
+    }
+
+    .update-content{
+        color:#4b5563;
+        line-height:1.7;
+    }
+
+    .update-content p{
+        margin-bottom:10px;
+    }
+
+    .build-details{
+        list-style:none;
+        margin-top:15px;
+        padding:0;
+    }
+
+    .build-details li{
+        background:#f0f7ff;
+        border-radius:8px;
+        margin:8px 0;
+        padding:9px 12px;
+    }
+
+    .build-details strong{
+        color:#1e40af;
+    }
+
+    .activity-table{
+        width:100%;
+        border-collapse:collapse;
+        overflow:hidden;
+        border-radius:8px;
+    }
+
+    .activity-table th,
+    .activity-table td{
+        text-align:left;
+        padding:12px 10px;
+        border-bottom:1px solid #e5e7eb;
+    }
+
+    .activity-table th{
+        background:#ecfdf5;
+        color:#047857;
+        font-weight:600;
+    }
+
+    .activity-table td{
+        color:#4b5563;
+    }
+
+    .activity-table tr:last-child td{
+        border-bottom:none;
     }
 
     .card-grid{
@@ -133,23 +223,32 @@
         .card{
             padding:20px;
         }
+
+        .update-box{
+            padding:20px;
+        }
+
+        .activity-table th,
+        .activity-table td{
+            padding:10px 7px;
+            font-size:14px;
+        }
     }
 
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+        background-color: #FFF;
+        font-size: 16px;
+        color: #2a2a2a;
+    }
 
-   body {
-            font-family: Arial, sans-serif;
-            line-height: 1.5;
-            background-color: #FFF;
-            font-size: 16px;
-            color: #2a2a2a;
-        }
-
-        marquee {
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
-            border: 1px solid rgba(0, 0, 0, .15);
-            background-color: #ffffff;
-            padding: 10px;
-        }
+    marquee {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+        border: 1px solid rgba(0, 0, 0, .15);
+        background-color: #ffffff;
+        padding: 10px;
+    }
 </style>
 </head>
 
@@ -170,6 +269,41 @@
     <marquee width="100%" direction="left" height="50px" behavior="scroll" scrollamount="4">
         Updates: Currently we are working on android and ios built 4.0.27 Daily Task: Update productivity tracker , Update Check in and check out at Whats app Group with Plan of the day
     </marquee>
+
+    <div class="updates-grid">
+        <section class="update-box">
+            <h3><i class="fas fa-bullhorn"></i> Today's Update</h3>
+            <div class="update-content">
+                <p>Regression builds have been shared to all.</p>
+                <p>Please test over the weekend and let us know the feedback.</p>
+                <ul class="build-details">
+                    <li><strong>Android Firebase:</strong> 4.0.30 (242175)</li>
+                    <li><strong>iOS TestFlight:</strong> 4.0.30 (6)</li>
+                    <li><strong>Date:</strong> 21st September 2026</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="update-box activity-box">
+            <h3><i class="fas fa-calendar-check"></i> Today's Activity</h3>
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Resource Name</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>21st September 2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
 
     <div class="card-grid" id="formContainer">
 
