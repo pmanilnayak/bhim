@@ -1,0 +1,41 @@
+Slno,Name,Date,In,Out,Task Title,Planned Task Decsription,Completed Task Description ,status,Remark
+1,Uzaifa,21st Sept 2026,09:30,06:30,IOS regression Testing,"Completed iOS testing for the following modules:
+Login & Onboarding – 168
+Notifications – 30 
+Send to UPI Bank / Self – 118 
+Reached out to Pradip regarding Widgets test cases 
+Connected with Asish regarding the app tickets.","Completed iOS testing for the following modules:
+Login & Onboarding – 168
+Notifications – 30 
+Send to UPI Bank / Self – 118 
+Reached out to Pradip regarding Widgets test cases 
+Connected with Asish regarding the app tickets.",Completed,
+2,Snehal ,21st Sept 2026,09:30,06:30,IOS regression Testing,"Completed ios regression testing modules -
+1. Action needed: 31
+2. ?Help & Support : 212
+3. ?Learn How to use UPI : 2
+4. ?About us : 21
+5. ?Check balance :20
+6. ?Refer n Earn : 51
+7. ?Setting : 147","Completed ios regression testing modules -
+1. Action needed: 31
+2. ?Help & Support : 212
+3. ?Learn How to use UPI : 2
+4. ?About us : 21
+5. ?Check balance :20
+6. ?Refer n Earn : 51
+7. ?Setting : 147",Completed,
+3,Srushtee,21st Sept 2026,09:30,06:30,Android regression Testing,"test cases execution count 4.0.30(242175)
+Settings - 147
+About us - 15
+Dashboard - 109
+Fastag - 67
+Subscribtion - 41","test cases execution count 4.0.30(242175)
+Settings - 147
+About us - 15
+Dashboard - 109
+Fastag - 67
+Subscribtion - 41",Completed,
+4,Akash,21st Sept 2026,09:30,06:30,Android regression Testing,"Today's test case execution count 
+Login and onboarding -168","Today's test case execution count 
+Login and onboarding -168",Completed,
