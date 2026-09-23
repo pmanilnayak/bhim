@@ -150,31 +150,10 @@
 
   <script>
     const tasks =[
-      { name: "Uzaiffa", task: "IOS  regression testing", date: "2026-09-21", status: "in-progress", details: " * Completed iOS testing for the following modules:
-    * Login & Onboarding – 168
-    * Notifications – 30 
-    * Send to UPI Bank / Self – 118 
-* Reached out to Pradip regarding Widgets test cases 
-* Connected with Asish regarding the app tickets" },
-      { name: "Snehal", task: "IOS Regression Testing", date: "2026-09-21", status: "in-progress", details: " Completed ios regression testing modules -
-1. Action needed: 31
-2. ⁠Help & Support : 212
-3. ⁠Learn How to use UPI : 2
-4. ⁠About us : 21
-5. ⁠Check balance :20
-6. ⁠Refer n Earn : 51
-7. ⁠Setting : 147" },
-      { name: "Srushtee", task: "Regression testing - Android build", date: "2026-09-21", status: "in-progress", details: "test cases execution count 4.0.30(242175)
-Settings - 147
-About us - 15
-Dashboard - 109
-Fastag - 67
-Subscribtion - 41." },
-      { name: "Akash Gule", task: "Planned leave", date: "2026-09-21", status: "completed", details: "I was working in the second half today.
-Today's test case execution count 
-Login and onboarding -168”}
-     
-
+      { name: "Uzaifa", task: "IOS regression Testing", date: "2026-09-21", status: "completed", details: "Completed iOS testing for the following modules:\nLogin & Onboarding – 168\nNotifications – 30\nSend to UPI Bank / Self – 118\nReached out to Pradip regarding Widgets test cases\nConnected with Asish regarding the app tickets." },
+      { name: "Snehal", task: "IOS regression Testing", date: "2026-09-21", status: "completed", details: "Completed ios regression testing modules -\n1. Action needed: 31\n2. ?Help & Support : 212\n3. ?Learn How to use UPI : 2\n4. ?About us : 21\n5. ?Check balance :20\n6. ?Refer n Earn : 51\n7. ?Setting : 147" },
+      { name: "Srushtee", task: "Android regression Testing", date: "2026-09-21", status: "completed", details: "test cases execution count 4.0.30(242175)\nSettings - 147\nAbout us - 15\nDashboard - 109\nFastag - 67\nSubscribtion - 41" },
+      { name: "Akash", task: "Android regression Testing", date: "2026-09-21", status: "completed", details: "Today's test case execution count\nLogin and onboarding -168" }
     ];
 
     const container = document.getElementById("taskContainer");
@@ -231,7 +210,7 @@ Login and onboarding -168”}
             <span><i class="fa-solid fa-user"></i> ${task.name}</span>
             <span><i class="fa-regular fa-calendar"></i> ${formatDate(task.date)}</span>
           </div>
-          <p class="task-description"><strong>Task in details:</strong> ${task.details}</p>
+          <p class="task-description"><strong>Task in details:</strong> ${task.details.replace(/\n/g, "<br>")}</p>
         </article>
       `).join("") : '<p class="empty">No tasks match the selected filters.</p>';
     }
