@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -47,7 +47,7 @@
             margin-bottom: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
         }
 
@@ -83,6 +83,7 @@
             display: flex;
             gap: 10px;
             align-items: flex-end;
+            flex-wrap: wrap;
         }
 
         button {
@@ -143,95 +144,132 @@
             color: #666;
         }
 
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
+        /* List View Styles */
+        .list-container {
             background: white;
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
-
-        .card-header {
+        .list-header {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr 1fr 1fr 0.5fr;
+            gap: 20px;
+            padding: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .card-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 8px;
-            word-break: break-word;
-        }
-
-        .card-subtitle {
-            font-size: 0.9em;
-            opacity: 0.9;
-            word-break: break-word;
-        }
-
-        .card-body {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-info {
-            margin-bottom: 12px;
-        }
-
-        .card-label {
             font-weight: 600;
-            color: #667eea;
-            font-size: 0.85em;
-            margin-bottom: 4px;
+            border-bottom: 2px solid #555;
         }
 
-        .card-value {
+        .list-header div {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        .sort-indicator {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .list-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .list-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr 1fr 1fr 0.5fr;
+            gap: 20px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .list-row:hover {
+            background: #f8f9fa;
+            box-shadow: inset 0 0 10px rgba(102, 126, 234, 0.1);
+        }
+
+        .list-row:last-child {
+            border-bottom: none;
+        }
+
+        .row-resource {
+            font-weight: 600;
             color: #333;
+            word-break: break-word;
+        }
+
+        .row-date {
+            color: #666;
             font-size: 0.95em;
             word-break: break-word;
         }
 
-        .card-footer {
-            margin-top: auto;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+        .row-email {
+            color: #667eea;
+            font-size: 0.95em;
+            word-break: break-word;
         }
 
-        .view-details-btn {
+        .row-hours {
+            background: #f0f4ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .row-status {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-pending {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .row-action {
+            text-align: center;
+        }
+
+        .view-btn {
             background: #667eea;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
-            width: 100%;
+            font-size: 0.85em;
         }
 
-        .view-details-btn:hover {
+        .view-btn:hover {
             background: #5568d3;
+            transform: scale(1.05);
         }
 
         /* Modal Styles */
@@ -349,7 +387,6 @@
         }
 
         .empty-state {
-            grid-column: 1 / -1;
             text-align: center;
             padding: 60px 20px;
             color: white;
@@ -380,6 +417,23 @@
             margin-bottom: 20px;
         }
 
+        @media (max-width: 1024px) {
+            .list-header,
+            .list-row {
+                grid-template-columns: 1.5fr 1.5fr 1fr 1fr 0.5fr;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .row-date {
+                display: none;
+            }
+
+            .list-header div:nth-child(2) {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.8em;
@@ -397,8 +451,25 @@
                 width: 100%;
             }
 
-            .cards-container {
-                grid-template-columns: 1fr;
+            .list-header,
+            .list-row {
+                grid-template-columns: 1.5fr 1fr 1fr 0.5fr;
+                gap: 10px;
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .row-date,
+            .list-header div:nth-child(2) {
+                display: none;
+            }
+
+            .row-email {
+                display: none;
+            }
+
+            .list-header div:nth-child(3) {
+                display: none;
             }
 
             .modal-content {
@@ -453,7 +524,7 @@
         </div>
 
         <div id="errorContainer"></div>
-        <div class="cards-container" id="cardsContainer">
+        <div class="list-container" id="listContainer">
             <div class="loading">Loading productivity data...</div>
         </div>
     </div>
@@ -472,16 +543,16 @@
     <script>
         let allData = [];
         let filteredData = [];
+        let sortConfig = { key: 'Date Range', direction: 'desc' };
 
         // Google Sheets API Configuration
         const SHEET_ID = '1rnnZrSiaEYqYbB0z0cAe5D2UtCNXjlkCQyA3voN5Im8';
-        const API_KEY = 'AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA'; // You'll need to add your actual API key
-        const RANGE = 'Sheet1!A:F'; // Adjust based on your sheet structure
+        const API_KEY = 'AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA';
+        const RANGE = 'Form Responses 1!A:R';
      
         // Function to fetch data from Google Sheets
         async function fetchSheetData() {
-         //   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
-           const url= `https://sheets.googleapis.com/v4/spreadsheets/1rnnZrSiaEYqYbB0z0cAe5D2UtCNXjlkCQyA3voN5Im8/values/Form%20Responses%201!A:R?key=AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/1rnnZrSiaEYqYbB0z0cAe5D2UtCNXjlkCQyA3voN5Im8/values/Form%20Responses%201!A:R?key=AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA`;
             
             try {
                 const response = await fetch(url);
@@ -508,8 +579,9 @@
                 });
 
                 filteredData = [...allData];
+                sortData();
                 updateStats();
-                renderCards();
+                renderList();
             } catch (error) {
                 console.error('Error fetching data:', error);
                 showError(error.message);
@@ -525,11 +597,12 @@
                 { id: 3, Resource: 'Testing', 'Date Range': '2024-01-10 to 2024-01-25', 'Mail ID': 'test@example.com', Hours: '95', Status: 'In Progress', Description: 'Quality assurance and testing' },
                 { id: 4, Resource: 'Documentation', 'Date Range': '2024-01-05 to 2024-01-30', 'Mail ID': 'docs@example.com', Hours: '40', Status: 'Completed', Description: 'API documentation' },
                 { id: 5, Resource: 'Deployment', 'Date Range': '2024-01-15 to 2024-01-28', 'Mail ID': 'devops@example.com', Hours: '35', Status: 'In Progress', Description: 'Server deployment and setup' },
-                { id: 6, Resource: 'Support', 'Date Range': '2024-01-12 to 2024-01-31', 'Mail ID': 'support@example.com', Hours: '60', Status: 'In Progress', Description: 'Customer support and maintenance' },
+                { id: 6, Resource: 'Support', 'Date Range': '2024-01-12 to 2024-01-31', 'Mail ID': 'support@example.com', Hours: '60', Status: 'In Progress', Description: 'Customer support and maintenance' }
             ];
             filteredData = [...allData];
+            sortData();
             updateStats();
-            renderCards();
+            renderList();
         }
 
         function showError(message) {
@@ -549,8 +622,49 @@
             document.getElementById('uniqueEmails').textContent = uniqueEmails;
         }
 
-        function renderCards() {
-            const container = document.getElementById('cardsContainer');
+        function extractDate(dateRange) {
+            if (!dateRange) return new Date(0);
+            // Extract first date from range like "2024-01-01 to 2024-01-15"
+            const dateMatch = dateRange.match(/(\d{4}-\d{2}-\d{2})/);
+            if (dateMatch) {
+                return new Date(dateMatch[1]);
+            }
+            return new Date(0);
+        }
+
+        function sortData() {
+            filteredData.sort((a, b) => {
+                let aVal = a[sortConfig.key] || '';
+                let bVal = b[sortConfig.key] || '';
+
+                // Special handling for dates
+                if (sortConfig.key === 'Date Range') {
+                    aVal = extractDate(aVal);
+                    bVal = extractDate(bVal);
+                } else if (sortConfig.key === 'Hours') {
+                    aVal = parseInt(aVal) || 0;
+                    bVal = parseInt(bVal) || 0;
+                } else {
+                    aVal = String(aVal).toLowerCase();
+                    bVal = String(bVal).toLowerCase();
+                }
+
+                if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        function getStatusClass(status) {
+            if (!status) return '';
+            status = status.toLowerCase();
+            if (status.includes('completed')) return 'status-completed';
+            if (status.includes('progress')) return 'status-in-progress';
+            return 'status-pending';
+        }
+
+        function renderList() {
+            const container = document.getElementById('listContainer');
             
             if (filteredData.length === 0) {
                 container.innerHTML = `
@@ -562,31 +676,41 @@
                 return;
             }
 
-            container.innerHTML = filteredData.map(item => `
-                <div class="card" onclick="openModal(${item.id})">
-                    <div class="card-header">
-                        <div class="card-title">${item.Resource || 'N/A'}</div>
-                        <div class="card-subtitle">${item['Date Range'] || 'No date range'}</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-info">
-                            <div class="card-label">EMAIL</div>
-                            <div class="card-value">${item['Mail ID'] || 'N/A'}</div>
-                        </div>
-                        <div class="card-info">
-                            <div class="card-label">HOURS ALLOCATED</div>
-                            <div class="card-value">${item.Hours || 'N/A'} hours</div>
-                        </div>
-                        <div class="card-info">
-                            <div class="card-label">STATUS</div>
-                            <div class="card-value">${item.Status || 'N/A'}</div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="view-details-btn">View Full Details →</button>
-                        </div>
-                    </div>
+            const headers = ['Resource', 'Date Range', 'Email', 'Hours', 'Status', 'Action'];
+            const headerHTML = `
+                <div class="list-header">
+                    <div onclick="changSort('Resource')">Resource ${sortConfig.key === 'Resource' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div onclick="changeSort('Date Range')">Date Range ${sortConfig.key === 'Date Range' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div onclick="changeSort('Mail ID')">Email ${sortConfig.key === 'Mail ID' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div onclick="changeSort('Hours')">Hours ${sortConfig.key === 'Hours' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div onclick="changeSort('Status')">Status ${sortConfig.key === 'Status' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div>Action</div>
+                </div>
+            `;
+
+            const rowsHTML = filteredData.map(item => `
+                <div class="list-row">
+                    <div class="row-resource">${item.Resource || 'N/A'}</div>
+                    <div class="row-date">${item['Date Range'] || 'N/A'}</div>
+                    <div class="row-email">${item['Mail ID'] || 'N/A'}</div>
+                    <div class="row-hours">${item.Hours || 'N/A'}</div>
+                    <div class="row-status ${getStatusClass(item.Status)}">${item.Status || 'N/A'}</div>
+                    <div class="row-action"><button class="view-btn" onclick="openModal(${item.id})">View</button></div>
                 </div>
             `).join('');
+
+            container.innerHTML = headerHTML + '<div class="list-body">' + rowsHTML + '</div>';
+        }
+
+        function changeSort(key) {
+            if (sortConfig.key === key) {
+                sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortConfig.key = key;
+                sortConfig.direction = 'asc';
+            }
+            sortData();
+            renderList();
         }
 
         function openModal(id) {
@@ -635,8 +759,9 @@
                 );
             });
 
+            sortData();
             updateStats();
-            renderCards();
+            renderList();
         }
 
         function resetFilters() {
@@ -645,8 +770,10 @@
             document.getElementById('filterEmail').value = '';
             
             filteredData = [...allData];
+            sortConfig = { key: 'Date Range', direction: 'desc' };
+            sortData();
             updateStats();
-            renderCards();
+            renderList();
         }
 
         // Event Listeners
