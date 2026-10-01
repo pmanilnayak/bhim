@@ -477,10 +477,11 @@
         const SHEET_ID = '1rnnZrSiaEYqYbB0z0cAe5D2UtCNXjlkCQyA3voN5Im8';
         const API_KEY = 'AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA'; // You'll need to add your actual API key
         const RANGE = 'Sheet1!A:F'; // Adjust based on your sheet structure
-        //AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA
+     
         // Function to fetch data from Google Sheets
         async function fetchSheetData() {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+         //   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+           const url= `https://sheets.googleapis.com/v4/spreadsheets/1rnnZrSiaEYqYbB0z0cAe5D2UtCNXjlkCQyA3voN5Im8/values/Form%20Responses%201!A:R?key=AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA`;
             
             try {
                 const response = await fetch(url);
