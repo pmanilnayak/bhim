@@ -417,6 +417,17 @@
             margin-bottom: 20px;
         }
 
+        .debug-info {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
         @media (max-width: 1024px) {
             .list-header,
             .list-row {
@@ -524,6 +535,7 @@
         </div>
 
         <div id="errorContainer"></div>
+        <div id="debugContainer"></div>
         <div class="list-container" id="listContainer">
             <div class="loading">Loading productivity data...</div>
         </div>
@@ -543,12 +555,12 @@
     <script>
         let allData = [];
         let filteredData = [];
-        let sortConfig = { key: 'Date Range', direction: 'desc' };
+        let sortConfig = { key: 'Timestamp', direction: 'desc' };
+        let columnMapping = {}; // Dynamic column mapping
 
         // Google Sheets API Configuration
         const SHEET_ID = '1rnnZrSiaEYqYbB0z0cAe5D2UtCNXjlkCQyA3voN5Im8';
         const API_KEY = 'AIzaSyD_ROTdiJYsNni3YL_x12_Fy_dYZN6GuPA';
-        const RANGE = 'Form Responses 1!A:R';
      
         // Function to fetch data from Google Sheets
         async function fetchSheetData() {
@@ -569,6 +581,21 @@
 
                 // Parse the data
                 const headers = values[0];
+                console.log('Headers from sheet:', headers);
+                showDebugInfo('Headers found: ' + headers.join(', '));
+
+                // Create dynamic column mapping
+                columnMapping = {
+                    resource: findColumn(headers, ['Resource', 'resource', 'Project']),
+                    date: findColumn(headers, ['Timestamp', 'Date', 'Date Range', 'date']),
+                    email: findColumn(headers, ['Email', 'Mail', 'Mail ID', 'email']),
+                    hours: findColumn(headers, ['Hours', 'hours', 'Duration']),
+                    status: findColumn(headers, ['Status', 'status'])
+                };
+
+                console.log('Column mapping:', columnMapping);
+                showDebugInfo('Column mapping created. Found: ' + JSON.stringify(columnMapping));
+
                 allData = values.slice(1).map((row, index) => {
                     const item = {};
                     headers.forEach((header, i) => {
@@ -578,6 +605,7 @@
                     return item;
                 });
 
+                console.log('Sample data:', allData[0]);
                 filteredData = [...allData];
                 sortData();
                 updateStats();
@@ -585,20 +613,94 @@
             } catch (error) {
                 console.error('Error fetching data:', error);
                 showError(error.message);
-                // Load sample data for demonstration
+                showDebugInfo('Error: ' + error.message);
                 loadSampleData();
             }
         }
 
+        function findColumn(headers, possibleNames) {
+            for (let name of possibleNames) {
+                const found = headers.find(h => h && h.toLowerCase().trim() === name.toLowerCase().trim());
+                if (found) return found;
+            }
+            return headers[0]; // Default to first column
+        }
+
+        function showDebugInfo(message) {
+            const debugContainer = document.getElementById('debugContainer');
+            debugContainer.innerHTML = `<div class="debug-info">🔍 Debug: ${message}</div>`;
+            setTimeout(() => {
+                debugContainer.innerHTML = '';
+            }, 5000);
+        }
+
         function loadSampleData() {
             allData = [
-                { id: 1, Resource: 'Development', 'Date Range': '2024-01-01 to 2024-01-15', 'Mail ID': 'dev@example.com', Hours: '120', Status: 'In Progress', Description: 'Backend development tasks' },
-                { id: 2, Resource: 'Design', 'Date Range': '2024-01-08 to 2024-01-20', 'Mail ID': 'design@example.com', Hours: '80', Status: 'Completed', Description: 'UI/UX design mockups' },
-                { id: 3, Resource: 'Testing', 'Date Range': '2024-01-10 to 2024-01-25', 'Mail ID': 'test@example.com', Hours: '95', Status: 'In Progress', Description: 'Quality assurance and testing' },
-                { id: 4, Resource: 'Documentation', 'Date Range': '2024-01-05 to 2024-01-30', 'Mail ID': 'docs@example.com', Hours: '40', Status: 'Completed', Description: 'API documentation' },
-                { id: 5, Resource: 'Deployment', 'Date Range': '2024-01-15 to 2024-01-28', 'Mail ID': 'devops@example.com', Hours: '35', Status: 'In Progress', Description: 'Server deployment and setup' },
-                { id: 6, Resource: 'Support', 'Date Range': '2024-01-12 to 2024-01-31', 'Mail ID': 'support@example.com', Hours: '60', Status: 'In Progress', Description: 'Customer support and maintenance' }
+                { 
+                    id: 1, 
+                    'Resource': 'Development', 
+                    'Timestamp': '2024-01-01 to 2024-01-15', 
+                    'Email': 'dev@example.com', 
+                    'Hours': '120', 
+                    'Status': 'In Progress', 
+                    'Description': 'Backend development tasks' 
+                },
+                { 
+                    id: 2, 
+                    'Resource': 'Design', 
+                    'Timestamp': '2024-01-08 to 2024-01-20', 
+                    'Email': 'design@example.com', 
+                    'Hours': '80', 
+                    'Status': 'Completed', 
+                    'Description': 'UI/UX design mockups' 
+                },
+                { 
+                    id: 3, 
+                    'Resource': 'Testing', 
+                    'Timestamp': '2024-01-10 to 2024-01-25', 
+                    'Email': 'test@example.com', 
+                    'Hours': '95', 
+                    'Status': 'In Progress', 
+                    'Description': 'Quality assurance and testing' 
+                },
+                { 
+                    id: 4, 
+                    'Resource': 'Documentation', 
+                    'Timestamp': '2024-01-05 to 2024-01-30', 
+                    'Email': 'docs@example.com', 
+                    'Hours': '40', 
+                    'Status': 'Completed', 
+                    'Description': 'API documentation' 
+                },
+                { 
+                    id: 5, 
+                    'Resource': 'Deployment', 
+                    'Timestamp': '2024-01-15 to 2024-01-28', 
+                    'Email': 'devops@example.com', 
+                    'Hours': '35', 
+                    'Status': 'In Progress', 
+                    'Description': 'Server deployment and setup' 
+                },
+                { 
+                    id: 6, 
+                    'Resource': 'Support', 
+                    'Timestamp': '2024-01-12 to 2024-01-31', 
+                    'Email': 'support@example.com', 
+                    'Hours': '60', 
+                    'Status': 'In Progress', 
+                    'Description': 'Customer support and maintenance' 
+                }
             ];
+            
+            // Set default column mapping for sample data
+            columnMapping = {
+                resource: 'Resource',
+                date: 'Timestamp',
+                email: 'Email',
+                hours: 'Hours',
+                status: 'Status'
+            };
+            
             filteredData = [...allData];
             sortData();
             updateStats();
@@ -613,8 +715,8 @@
         function updateStats() {
             const totalCount = allData.length;
             const filteredCount = filteredData.length;
-            const uniqueResources = new Set(filteredData.map(item => item.Resource || '')).size;
-            const uniqueEmails = new Set(filteredData.map(item => item['Mail ID'] || '')).size;
+            const uniqueResources = new Set(filteredData.map(item => item[columnMapping.resource] || '')).size;
+            const uniqueEmails = new Set(filteredData.map(item => item[columnMapping.email] || '')).size;
 
             document.getElementById('totalCount').textContent = totalCount;
             document.getElementById('filteredCount').textContent = filteredCount;
@@ -624,7 +726,6 @@
 
         function extractDate(dateRange) {
             if (!dateRange) return new Date(0);
-            // Extract first date from range like "2024-01-01 to 2024-01-15"
             const dateMatch = dateRange.match(/(\d{4}-\d{2}-\d{2})/);
             if (dateMatch) {
                 return new Date(dateMatch[1]);
@@ -634,14 +735,19 @@
 
         function sortData() {
             filteredData.sort((a, b) => {
-                let aVal = a[sortConfig.key] || '';
-                let bVal = b[sortConfig.key] || '';
+                let sortKey = sortConfig.key;
+                
+                // Use mapped column if sorting by date or email
+                if (sortConfig.key === 'Date') sortKey = columnMapping.date;
+                if (sortConfig.key === 'Email') sortKey = columnMapping.email;
+                
+                let aVal = a[sortKey] || '';
+                let bVal = b[sortKey] || '';
 
-                // Special handling for dates
-                if (sortConfig.key === 'Date Range') {
+                if (sortKey === columnMapping.date) {
                     aVal = extractDate(aVal);
                     bVal = extractDate(bVal);
-                } else if (sortConfig.key === 'Hours') {
+                } else if (sortKey === columnMapping.hours) {
                     aVal = parseInt(aVal) || 0;
                     bVal = parseInt(bVal) || 0;
                 } else {
@@ -676,12 +782,11 @@
                 return;
             }
 
-            const headers = ['Resource', 'Date Range', 'Email', 'Hours', 'Status', 'Action'];
             const headerHTML = `
                 <div class="list-header">
-                    <div onclick="changSort('Resource')">Resource ${sortConfig.key === 'Resource' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
-                    <div onclick="changeSort('Date Range')">Date Range ${sortConfig.key === 'Date Range' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
-                    <div onclick="changeSort('Mail ID')">Email ${sortConfig.key === 'Mail ID' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div onclick="changeSort('Resource')">Resource ${sortConfig.key === 'Resource' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div onclick="changeSort('Date')">Date ${sortConfig.key === 'Date' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
+                    <div onclick="changeSort('Email')">Email ${sortConfig.key === 'Email' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
                     <div onclick="changeSort('Hours')">Hours ${sortConfig.key === 'Hours' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
                     <div onclick="changeSort('Status')">Status ${sortConfig.key === 'Status' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</div>
                     <div>Action</div>
@@ -690,11 +795,11 @@
 
             const rowsHTML = filteredData.map(item => `
                 <div class="list-row">
-                    <div class="row-resource">${item.Resource || 'N/A'}</div>
-                    <div class="row-date">${item['Date Range'] || 'N/A'}</div>
-                    <div class="row-email">${item['Mail ID'] || 'N/A'}</div>
-                    <div class="row-hours">${item.Hours || 'N/A'}</div>
-                    <div class="row-status ${getStatusClass(item.Status)}">${item.Status || 'N/A'}</div>
+                    <div class="row-resource">${item[columnMapping.resource] || 'N/A'}</div>
+                    <div class="row-date">${item[columnMapping.date] || 'N/A'}</div>
+                    <div class="row-email">${item[columnMapping.email] || 'N/A'}</div>
+                    <div class="row-hours">${item[columnMapping.hours] || 'N/A'}</div>
+                    <div class="row-status ${getStatusClass(item[columnMapping.status])}">${item[columnMapping.status] || 'N/A'}</div>
                     <div class="row-action"><button class="view-btn" onclick="openModal(${item.id})">View</button></div>
                 </div>
             `).join('');
@@ -720,7 +825,7 @@
             const modalTitle = document.getElementById('modalTitle');
             const modalBody = document.getElementById('modalBody');
 
-            modalTitle.textContent = item.Resource || 'Details';
+            modalTitle.textContent = item[columnMapping.resource] || 'Details';
             
             let detailsHTML = '';
             Object.entries(item).forEach(([key, value]) => {
@@ -748,9 +853,9 @@
             const emailFilter = document.getElementById('filterEmail').value.toLowerCase();
 
             filteredData = allData.filter(item => {
-                const resource = (item.Resource || '').toLowerCase();
-                const dateRange = (item['Date Range'] || '').toLowerCase();
-                const email = (item['Mail ID'] || '').toLowerCase();
+                const resource = (item[columnMapping.resource] || '').toLowerCase();
+                const dateRange = (item[columnMapping.date] || '').toLowerCase();
+                const email = (item[columnMapping.email] || '').toLowerCase();
 
                 return (
                     (resourceFilter === '' || resource.includes(resourceFilter)) &&
@@ -770,7 +875,7 @@
             document.getElementById('filterEmail').value = '';
             
             filteredData = [...allData];
-            sortConfig = { key: 'Date Range', direction: 'desc' };
+            sortConfig = { key: 'Timestamp', direction: 'desc' };
             sortData();
             updateStats();
             renderList();
