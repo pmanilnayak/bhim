@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .btn-filter {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-filter:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-reset {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-reset:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .card-subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+            word-break: break-word;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-info {
+            margin-bottom: 12px;
+        }
+
+        .card-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.85em;
+            margin-bottom: 4px;
+        }
+
+        .card-value {
+            color: #333;
+            font-size: 0.95em;
+            word-break: break-word;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .view-details-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .view-details-btn:hover {
+            background: #5568d3;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-header h2 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .detail-row {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 1.05em;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .empty-state h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+
+        .error-message {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Productivity Dashboard</h1>
+            <p>Track and manage your productivity data</p>
+        </header>
+
+        <div class="controls">
+            <div class="filter-group">
+                <label for="filterResource">Filter by Resource:</label>
+                <input type="text" id="filterResource" placeholder="Enter resource name...">
+            </div>
+            <div class="filter-group">
+                <label for="filterDateRange">Date Range:</label>
+                <input type="text" id="filterDateRange" placeholder="e.g., 2024-01 or date range...">
+            </div>
+            <div class="filter-group">
+                <label for="filterEmail">Filter by Email:</label>
+                <input type="email" id="filterEmail" placeholder="Enter email address...">
+            </div>
+            <div class="button-group">
+                <button class="btn-filter" id="applyFilter">Apply Filters</button>
+                <button class="btn-reset" id="resetFilter">Reset</button>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="number" id="totalCount">0</div>
+                <div class="label">Total Records</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="filteredCount">0</div>
+                <div class="label">Filtered Records</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="uniqueResources">0</div>
+                <div class="label">Unique Resources</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="uniqueEmails">0</div>
+                <div class="label">Unique Emails</div>
+            </div>
+        </div>
+
+        <div id="errorContainer"></div>
+        <div class="cards-container" id="cardsContainer">
+            <div class="loading">Loading productivity data...</div>
+        </div>
+    </div>
+
+    <!-- Modal for detailed view -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Details</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+        let filteredData = [];
+
+        // Google Sheets API Configuration
+        const SHEET_ID = '1rnnZrSiaEYqYbB0z0cAe5D2UtCNXjlkCQyA3voN5Im8';
+        const API_KEY = 'AIzaSyBKuRBhwPyAl_M4Xnlk7c9Y7e5Y5e5Y5e5'; // You'll need to add your actual API key
+        const RANGE = 'Sheet1!A:F'; // Adjust based on your sheet structure
+
+        // Function to fetch data from Google Sheets
+        async function fetchSheetData() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data. Make sure API key is valid and public sharing is enabled.');
+                }
+                
+                const data = await response.json();
+                const values = data.values || [];
+                
+                if (values.length < 2) {
+                    throw new Error('No data found in the spreadsheet.');
+                }
+
+                // Parse the data
+                const headers = values[0];
+                allData = values.slice(1).map((row, index) => {
+                    const item = {};
+                    headers.forEach((header, i) => {
+                        item[header] = row[i] || '';
+                    });
+                    item.id = index;
+                    return item;
+                });
+
+                filteredData = [...allData];
+                updateStats();
+                renderCards();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                showError(error.message);
+                // Load sample data for demonstration
+                loadSampleData();
+            }
+        }
+
+        function loadSampleData() {
+            allData = [
+                { id: 1, Resource: 'Development', 'Date Range': '2024-01-01 to 2024-01-15', 'Mail ID': 'dev@example.com', Hours: '120', Status: 'In Progress', Description: 'Backend development tasks' },
+                { id: 2, Resource: 'Design', 'Date Range': '2024-01-08 to 2024-01-20', 'Mail ID': 'design@example.com', Hours: '80', Status: 'Completed', Description: 'UI/UX design mockups' },
+                { id: 3, Resource: 'Testing', 'Date Range': '2024-01-10 to 2024-01-25', 'Mail ID': 'test@example.com', Hours: '95', Status: 'In Progress', Description: 'Quality assurance and testing' },
+                { id: 4, Resource: 'Documentation', 'Date Range': '2024-01-05 to 2024-01-30', 'Mail ID': 'docs@example.com', Hours: '40', Status: 'Completed', Description: 'API documentation' },
+                { id: 5, Resource: 'Deployment', 'Date Range': '2024-01-15 to 2024-01-28', 'Mail ID': 'devops@example.com', Hours: '35', Status: 'In Progress', Description: 'Server deployment and setup' },
+                { id: 6, Resource: 'Support', 'Date Range': '2024-01-12 to 2024-01-31', 'Mail ID': 'support@example.com', Hours: '60', Status: 'In Progress', Description: 'Customer support and maintenance' },
+            ];
+            filteredData = [...allData];
+            updateStats();
+            renderCards();
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `<div class="error-message">⚠️ ${message}</div>`;
+        }
+
+        function updateStats() {
+            const totalCount = allData.length;
+            const filteredCount = filteredData.length;
+            const uniqueResources = new Set(filteredData.map(item => item.Resource || '')).size;
+            const uniqueEmails = new Set(filteredData.map(item => item['Mail ID'] || '')).size;
+
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('filteredCount').textContent = filteredCount;
+            document.getElementById('uniqueResources').textContent = uniqueResources;
+            document.getElementById('uniqueEmails').textContent = uniqueEmails;
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cardsContainer');
+            
+            if (filteredData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No records found</h2>
+                        <p>Try adjusting your filters to see more results</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredData.map(item => `
+                <div class="card" onclick="openModal(${item.id})">
+                    <div class="card-header">
+                        <div class="card-title">${item.Resource || 'N/A'}</div>
+                        <div class="card-subtitle">${item['Date Range'] || 'No date range'}</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-info">
+                            <div class="card-label">EMAIL</div>
+                            <div class="card-value">${item['Mail ID'] || 'N/A'}</div>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-label">HOURS ALLOCATED</div>
+                            <div class="card-value">${item.Hours || 'N/A'} hours</div>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-label">STATUS</div>
+                            <div class="card-value">${item.Status || 'N/A'}</div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="view-details-btn">View Full Details →</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(id) {
+            const item = allData.find(d => d.id === id);
+            if (!item) return;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = item.Resource || 'Details';
+            
+            let detailsHTML = '';
+            Object.entries(item).forEach(([key, value]) => {
+                if (key !== 'id') {
+                    detailsHTML += `
+                        <div class="detail-row">
+                            <div class="detail-label">${key}</div>
+                            <div class="detail-value">${value || 'N/A'}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            modalBody.innerHTML = detailsHTML;
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        function applyFilters() {
+            const resourceFilter = document.getElementById('filterResource').value.toLowerCase();
+            const dateFilter = document.getElementById('filterDateRange').value.toLowerCase();
+            const emailFilter = document.getElementById('filterEmail').value.toLowerCase();
+
+            filteredData = allData.filter(item => {
+                const resource = (item.Resource || '').toLowerCase();
+                const dateRange = (item['Date Range'] || '').toLowerCase();
+                const email = (item['Mail ID'] || '').toLowerCase();
+
+                return (
+                    (resourceFilter === '' || resource.includes(resourceFilter)) &&
+                    (dateFilter === '' || dateRange.includes(dateFilter)) &&
+                    (emailFilter === '' || email.includes(emailFilter))
+                );
+            });
+
+            updateStats();
+            renderCards();
+        }
+
+        function resetFilters() {
+            document.getElementById('filterResource').value = '';
+            document.getElementById('filterDateRange').value = '';
+            document.getElementById('filterEmail').value = '';
+            
+            filteredData = [...allData];
+            updateStats();
+            renderCards();
+        }
+
+        // Event Listeners
+        document.getElementById('applyFilter').addEventListener('click', applyFilters);
+        document.getElementById('resetFilter').addEventListener('click', resetFilters);
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') closeModal();
+        });
+
+        // Allow Enter key to apply filters
+        document.getElementById('filterResource').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyFilters();
+        });
+        document.getElementById('filterDateRange').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyFilters();
+        });
+        document.getElementById('filterEmail').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyFilters();
+        });
+
+        // Initialize
+        fetchSheetData();
+    </script>
+</body>
+</html>
